@@ -1,0 +1,31 @@
+# LaTeX build files
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.pdf
+*.fdb_latexmk
+*.fls
+*.dvi
+*.lof
+*.lot
+
+# Editor temporary files
+*.vscode
+.vscode/
+.idea/
+*.bak
+*.swp
+*~
+
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# User specific configuration (optional, but good practice to ignore if they contain local paths)
+# jluthesis.cfg 
+# Keeping jluthesis.cfg for template but users might want to ignore their personal info in a real repo. 
+# For a template repo, we KEEP it as an example.
