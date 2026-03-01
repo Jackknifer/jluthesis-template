@@ -273,7 +273,7 @@
             \newlength{\cover@remain}
             \newlength{\cover@colone} 
             \newlength{\cover@coltwo}
-            \setlength{\cover@linewidth}{13cm}
+            \setlength{\cover@linewidth}{13.5cm}
             \setlength{\cover@underline}{\cover@linewidth - 4em}
             \makebox[4em][s]{中文题目}\CJKunderline{\makebox[\cover@underline]{\songti \zihao{3} \bfseries \cover@ctitlef}} \\
             \hspace{4em}\CJKunderline{\makebox[\cover@underline]{\songti \zihao{3} \bfseries \cover@ctitles}} \\
