@@ -177,7 +177,7 @@
 \RequirePackage{subcaption} 
 \RequirePackage[titles]{tocloft}
 
-\renewcommand{\baselinestretch}{1.2}
+\renewcommand{\baselinestretch}{1.5}
 \setlength\baselineskip{20pt}
 \setlength{\headheight}{15pt}
 
