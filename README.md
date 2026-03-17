@@ -1,4 +1,4 @@
-# 吉林大学本科毕业论文（设计）LaTeX 模板
+﻿# 吉林大学本科毕业论文（设计）LaTeX 模板
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![LaTeX](https://img.shields.io/badge/Language-LaTeX-blue.svg)](https://www.latex-project.org/)
@@ -59,7 +59,10 @@
 ### 6. 参考文献
 
 - **标准**: GB/T 7714-2015 顺序编码制。
-- **实现**: 使用 `gbt7714` 宏包 + BibTeX (`references.bib`) 管理。
+- **实现**: 使用 `gbt7714` 宏包 + 本地自定义样式文件 `jluthesis-gbt7714-numerical.bst` + BibTeX (`references.bib`) 管理。
+- **引用格式**: 数值顺序制，正文中以 `[1]` 形式显示。
+- **编号格式**: 文献列表条目编号显示为 `[1]` 带 0.5em 间距，无悬挂缩进。
+- **姓名格式**: 英文作者名以首字母缩写带点显示（如 `S.` / `S. T.`），不强制全大写。
 - **编译链**: `XeLaTeX -> BibTeX -> XeLaTeX x2`。
 
 ---
@@ -70,15 +73,16 @@
 
 ```text
 thesis-template/
-├── docs/                   # [核心] 文档文件夹 (存放承诺书 commitment.pdf)
-├── fonts/                  # [核心] 字体文件夹 (SimSun.TTC, SimHei.TTF)
-├── images/                 # [资源] 图片文件夹 (存放论文插图)
-├── jluthesis.cfg           # [配置] 论文基本信息配置文件 (题目、姓名、导师等)
-├── jluthesis.cls           # [核心] 样式文件 (定义页眉、标题、格式等核心逻辑)
-├── main.tex                # [入口] 论文主文件 (在此编写正文)
-├── mcode.sty               # [插件] 代码高亮宏包
-├── references.bib          # [数据] 参考文献数据库
-└── README.md               # [文档] 本说明文件
+├── docs/                              # [核心] 文档文件夹 (存放承诺书 commitment.pdf)
+├── fonts/                             # [核心] 字体文件夹 (SimSun.TTC, SimHei.TTF)
+├── images/                            # [资源] 图片文件夹 (存放论文插图)
+├── jluthesis.cfg                      # [配置] 论文基本信息配置文件 (题目、姓名、导师等)
+├── jluthesis.cls                      # [核心] 样式文件 (定义页眉、标题、格式等核心逻辑)
+├── jluthesis-gbt7714-numerical.bst    # [核心] 本地自定义参考文献样式 (基于 GB/T 7714-2015)
+├── main.tex                           # [入口] 论文主文件 (在此编写正文)
+├── mcode.sty                          # [插件] 代码高亮宏包
+├── references.bib                     # [数据] 参考文献数据库
+└── README.md                          # [文档] 本说明文件
 ```
 
 ---
@@ -295,17 +299,24 @@ def foo():
 
 ### 9. 参考文献
 
-本模板使用 **BibTeX** 管理参考文献，并配合 `gbt7714` 宏包自动生成符合国标（GB/T 7714-2015）的格式。
+本模板使用 **BibTeX** 管理参考文献，配合本地自定义样式文件 `jluthesis-gbt7714-numerical.bst`（基于 GB/T 7714-2015 国标改制），自动生成符合国标的参考文献列表。
+
+**格式特性**:
+
+- 数值顺序制，正文引用显示为 `[1]`、`[2,3]` 等形式。
+- 文献列表编号格式为 `[1]`（有间距，无悬挂缩进）。
+- 英文作者名以首字母缩写带点显示（如 `Zhang S. T.`），不全大写。
+- 支持中英文混合文献自动识别排版。
 
 **使用步骤**:
 
 1. **准备数据**:
    * 在 Google Scholar、百度学术或知网搜索文献。
-   * 点击“引用” -> “BibTeX” -> 复制内容。
+   * 点击"引用" -> "BibTeX" -> 复制内容。
    * 将复制的内容粘贴到项目根目录下的 `references.bib` 文件中。
 2. **在文中引用**:
-   * 找到你刚才粘贴的 BibTeX 条目第一行的大括号后面的标识符 (Key)，例如 `@article{jiang2025robust, ...}` 中的 `jiang2025robust`。
-   * 在 `main.tex` 正文需要引用的地方使用 `\cite{jiang2025robust}`。
+   * 找到 BibTeX 条目第一行大括号后的标识符 (Key)，例如 `@article{jiang2025robust, ...}` 中的 `jiang2025robust`。
+   * 在 `main.tex` 正文中使用 `\cite{jiang2025robust}`。
 3. **编译**:
    * 通常编辑器会自动处理。如果引用显示为 `[?]`，请尝试重新编译 1-2 次。
 
@@ -316,101 +327,10 @@ def foo():
 根据张三等人的研究 \cite{zhang2025robust} ...
 
 % 编译后效果
-根据姜亚蕾等人的研究 [1] ...
+根据张三等人的研究 [1] ...
 ```
 
-> **注意**: 不要直接要在 `main.tex` 里手动写 `\bibitem`，所有的文献都应该放在 `references.bib` 里统一管理。
+> **注意**: 不要直接在 `main.tex` 里手动写 `\bibitem`，所有文献都应放在 `references.bib` 里统一管理。
 
----
+> **进阶说明**: 若需定制参考文献格式（如修改作者名显示方式、开关全大写等），可直接编辑项目根目录下的 `jluthesis-gbt7714-numerical.bst` 文件，相关配置集中在文件顶部的 `load.config` 函数中。
 
-## ⚙️ 进阶定制 (修改格式)
-
-如果你需要调整格式以满足特殊需求，请参考以下指南。
-
-### 1. 修改页边距
-
-- **位置**: `jluthesis.cls` 文件。
-- **修改**: 找到 `\RequirePackage[margin=1in]{geometry}`，修改数值（如 `margin=2.5cm`）。
-
-### 2. 修改行距
-
-- **封面**: 在 `jluthesis.cls` 中找到 `\makecover` 定义下的 `\linespread{...}`。
-- **正文**: 在 `jluthesis.cls` 或 `main.tex` 中添加 `\linespread{数值}`。
-
-### 3. 修改字体 (从文件 vs 系统字体)
-
-模板默认使用 `fonts/` 文件夹下的字体文件，这样在不同电脑上（包括 Overleaf）效果一致。
-如果你想**使用系统安装的字体**（例如你电脑上已经安装了华文行楷等特殊字体）：
-
-1. **注释掉**带 `Path=fonts/` 的那行代码。
-2. **使用**系统字体名：
-
-```latex
-% \setCJKmainfont{SimSun} % 直接使用系统宋体
-% \newCJKfontfamily{\kaiti}{KaiTi} % 定义楷体
-```
-
-### 4. 修改页眉页脚
-
-本模板使用 `fancyhdr` 宏包。
-
-```latex
-\fancypagestyle{yemei}{
-    \fancyhf{} % 清空
-    \fancyhead[C]{...} % C=Center, L=Left, R=Right
-    \fancyfoot[C]{\thepage} % 页脚页码
-}
-```
-
-### 5. 目录显示深度
-
-如果你希望目录显示到三级标题（例如 1.1.1），请修改：
-
-```latex
-\setcounter{tocdepth}{3} % 2=显示到subsection, 3=显示到subsubsection
-```
-
----
-
-## ❓ 常见问题
-
-**Q1: 为什么编译后生成了一堆 `.aux`, `.log`, `.out` 文件？**
-A: 这些是 LaTeX 编译过程中产生的辅助文件，用于记录交叉引用、目录等信息。**不要手动删除它们**，否则目录和引用会消失。
-
-- **清理方法**: VS Code 插件通常提供了 "Clean up auxiliary files" 功能。
-- **关于 main.tex 的位置**: 建议初学者将 `main.tex` 放在根目录，而不是单独文件夹。因为 LaTeX 引用图片和字体时默认基于当前文件路径，如果移动 `main.tex`，所有 `images/` 和 `fonts/` 的路径都需要修改（变成 `../images/`），这会增加出错的风险。
-
-**Q2: 编译报错 "File `docs/commitment.pdf' not found"？**
-
-A: 这是因为缺少承诺书文件。请将你的承诺书 PDF 命名为 `commitment.pdf` 并放入 `docs/` 文件夹。如果不暂时不需要承诺书，可以在 `main.tex` 中注释掉 `\includepdf{docs/commitment.pdf}`。
-
-**Q3: 中文全是乱码或者是方框？**
-A:
-
-- 确保文件是以 **UTF-8** 编码打开的（VS Code 右下角会显示编码）。
-- 确保你正确配置了字体（见“字体配置”一节），并且用的是 **XeLaTeX** 编译器。
-
-**Q4: Overleaf 上编译超时 (Time out)？**
-A: 你的图片可能太大了，或者代码有无限循环错误。检查日志 (Logs)。
-
----
-
-## ⚠️ 声明
-
-本模板是一个简单可用的吉林大学本科学士学位论文 LaTeX 模板，旨在帮助同学们减轻毕业论文撰写过程中的排版工作量。
-
-**关于作者**：本项目由**吉林大学数学学院**一名大四学生制作。由于个人水平有限，时间仓促，模板中难免存在错误或疏漏，恳请各位朋友批评指正。同时也是“抛砖引玉”，欢迎更多校友制作出更优秀的模板丰富吉大的开源资源！
-
-**❗️ 重要提示（必读）：**
-
-1. **非官方版本**：截止目前，**吉林大学及数学学院**官方仅提供了毕业论文撰写要求，**并未**发布、授权或认证过任何 LaTeX 模板。
-2. **仅供参考**：本模板是作者对照《吉林大学本科毕业论文（设计）撰写要求》制作的。但这毕竟是个人实现，**不保证**完全符合所有审查老师的个人喜好或学院的临时变动。
-3. **使用须知**：具体是否使用本模板，请各位同学根据自身情况及导师要求**自行定夺**。如果在使用过程中遇到格式问题，请以学校发布的官方要求为准进行调整。
-
-随时倾听各位朋友的批评与教导！提前对发现缺陷并反馈的朋友报以诚挚的谢意！
-
----
-
-## 📜 许可证
-
-本项目采用 MIT 许可证开源。遵循吉林大学学位论文规范。
