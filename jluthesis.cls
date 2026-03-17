@@ -76,7 +76,10 @@
 
 % 参考文献设置
 \RequirePackage[sort&compress]{gbt7714}
-\bibliographystyle{gbt7714-numerical}
+\citestyle{numbers}
+\setcitestyle{numbers}
+\renewcommand{\bibnumfmt}[1]{[#1]\hspace{0.5em}}
+\bibliographystyle{jluthesis-gbt7714-numerical}
 
 % 图片路径
 \graphicspath{{images/}}
@@ -174,11 +177,12 @@
 % =========================================================================
 % 目录格式设置 (from beifen)
 % =========================================================================
-\RequirePackage{subcaption} 
+\RequirePackage{subcaption}
 \RequirePackage[titles]{tocloft}
+\RequirePackage{etoolbox}
 
 \renewcommand{\baselinestretch}{1.5}
-\setlength\baselineskip{20pt}
+\setlength\baselineskip{24pt}
 \setlength{\headheight}{15pt}
 
 \renewcommand{\cftdot}{.}
@@ -211,6 +215,10 @@
 % 图表标题格式 (Caption Format)
 % =========================================================================
 % 图表编号格式：章节号.序号 (如 1.1, 1.2)
+\RequirePackage{chngcntr}
+\counterwithin{equation}{section}
+\counterwithin{table}{section}
+\counterwithin{figure}{section}
 \renewcommand\thetable{\thesection.\arabic{table}} 
 \renewcommand\thefigure{\thesection.\arabic{figure}}
 
@@ -227,7 +235,10 @@
 % 标题样式设置 (Caption Setup)
 % labelsep=quad (标签与标题间空一格), font={small,heiti} (小号黑体)
 \DeclareCaptionFont{heiti}{\heiti}
-\captionsetup{labelformat=default,labelsep=quad,font={small,heiti}}
+\captionsetup{labelformat=default,labelsep=quad,font={normalsize,heiti}}
+\AtBeginEnvironment{tabular}{\zihao{-4}}
+\AtBeginEnvironment{tabularx}{\zihao{-4}}
+\AtBeginEnvironment{longtable}{\zihao{-4}}
 
 % =========================================================================
 % 加载配置文件
@@ -278,8 +289,8 @@
             \makebox[4em][s]{中文题目}\CJKunderline{\makebox[\cover@underline]{\songti \zihao{3} \bfseries \cover@ctitlef}} \\
             \hspace{4em}\CJKunderline{\makebox[\cover@underline]{\songti \zihao{3} \bfseries \cover@ctitles}} \\
             \setlength{\cover@underline}{\cover@linewidth - 4em}
-            \makebox[4em][s]{英文题目}\CJKunderline{\makebox[\cover@underline]{\songti \zihao{3} \bfseries \cover@etitlef}} \\
-            \hspace{4em}\CJKunderline{\makebox[\cover@underline]{\songti \zihao{3} \bfseries \cover@etitles}} \\
+            \makebox[4em][s]{英文题目}\CJKunderline{\makebox[\cover@underline]{\songti \zihao{-4} \bfseries \cover@etitlef}} \\
+            \hspace{4em}\CJKunderline{\makebox[\cover@underline]{\songti \zihao{-4} \bfseries \cover@etitles}} \\
             \vspace{1.5cm}
             \setlength{\cover@colone}{3.0cm} 
             \setlength{\cover@coltwo}{3.0cm}
@@ -414,6 +425,7 @@
     \newpage
     \phantomsection
     \addcontentsline{toc}{section}{参考文献}
+    \setlength{\bibhang}{0pt}
     \bibliography{references}
 }
 
