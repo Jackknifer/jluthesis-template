@@ -87,6 +87,20 @@ thesis-template/
 
 ---
 
+## 🗂️ 项目管理与 GitHub 协作
+
+为了让这个模板项目后续更容易维护、迭代和同步，仓库已经补充了以下管理文件：
+
+- `PROJECT_MANAGEMENT.md`：项目目标、任务分层、里程碑与日常维护流程。
+- `CHANGELOG.md`：统一记录后续变更，避免“改了什么没人说得清”。
+- `docs/GITHUB_SYNC.md`：GitHub 连接状态、推荐同步流程、冲突处理方式。
+- `scripts/sync_project_to_github.ps1`：面向日常提交与同步的保守型 PowerShell 脚本。
+- `.github/`：Issue / PR 模板，方便直接在 GitHub 上做清晰协作。
+
+如果你准备继续把这个仓库作为公开模板维护，建议优先在 GitHub Issues 中使用这些模板来跟踪格式修复、文档更新和版本发布任务。
+
+---
+
 ## 🛠️ 字体配置说明
 
 关于 **fonts 文件夹** 与 **系统安装字体** 的区别：
