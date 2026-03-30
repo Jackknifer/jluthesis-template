@@ -1,4 +1,4 @@
-﻿﻿# 吉林大学本科毕业论文（设计）LaTeX 模板
+# 吉林大学本科毕业论文（设计）LaTeX 模板
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![LaTeX](https://img.shields.io/badge/Language-LaTeX-blue.svg)](https://www.latex-project.org/)
