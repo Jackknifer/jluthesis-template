@@ -414,6 +414,7 @@
     \section*{致谢}
     \phantomsection
     \addcontentsline{toc}{section}{致谢}
+    \markboth{致谢}{致谢}
     \fancyhead[C]{\zihao{5}\songti{致谢}}
 }{
     \par
@@ -425,6 +426,7 @@
     \newpage
     \phantomsection
     \addcontentsline{toc}{section}{参考文献}
+    \markboth{参考文献}{参考文献}
     \setlength{\bibhang}{0pt}
     \bibliography{references}
 }
