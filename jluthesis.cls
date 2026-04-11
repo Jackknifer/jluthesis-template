@@ -180,6 +180,7 @@
 \RequirePackage{subcaption}
 \RequirePackage[titles]{tocloft}
 \RequirePackage{etoolbox}
+\RequirePackage{xparse}
 
 \renewcommand{\baselinestretch}{1.5}
 \setlength\baselineskip{24pt}
@@ -244,6 +245,12 @@
 % 加载配置文件
 % =========================================================================
 \input{jluthesis.cfg}
+
+% 正文章节状态控制
+\newif\ifjlu@mainmatter
+\newif\ifjlu@sectionbreak
+\jlu@mainmatterfalse
+\jlu@sectionbreakfalse
 
 % =========================================================================
 % 封面设计 (from jluthesis-main, Level 2)
@@ -324,10 +331,10 @@
 % 使用方法：\begin{cabstract} ... \end{cabstract}
 \newenvironment{cabstract}{
     % Header
-    \fancyhead[C]{\zihao{5}\songti{摘要}}
+    \fancyhead[C]{\zihao{5}\songti{\abstract@cabstract}}
     % Title
     \vspace*{0pt}
-    \centerline{\zihao{3}\songti\bfseries 摘\quad 要}
+    \centerline{\zihao{3}\songti\bfseries \abstract@cabstract}
     \vspace*{16pt}
     % Content Styling
     \linespread{1.4}
@@ -341,10 +348,10 @@
 \newenvironment{eabstract}{
     \newpage
     % Header
-    \fancyhead[C]{\zihao{5}\songti{Abstract}}
+    \fancyhead[C]{\zihao{5}\songti{\abstract@eabstract}}
     % Title
     \vspace*{0pt}
-    \centerline{\zihao{3}\bfseries Abstract}
+    \centerline{\zihao{3}\bfseries \abstract@eabstract}
     \vspace*{20pt}
     % Content Styling
     \linespread{1.4}
@@ -357,7 +364,7 @@
 % 使用方法：\ckeywords{词1；词2...}
 \newcommand{\ckeywords}[1]{
     \bigskip
-    \noindent{\zihao{-4}\songti \textbf{关键词：}}
+    \noindent{\zihao{-4}\songti \textbf{\abstract@ckeywords}}
     \par
     \noindent\hspace*{2\ccwd}#1
 }
@@ -365,7 +372,7 @@
 % 使用方法：\ekeywords{Word1; Word2...}
 \newcommand{\ekeywords}[1]{
     \bigskip
-    \noindent\textbf{\zihao{-4} Keywords:}
+    \noindent\textbf{\zihao{-4} \abstract@ekeywords}
     \par
     #1
 }
@@ -393,6 +400,8 @@
     \pagenumbering{arabic}
     \pagestyle{yemei}
     \zihao{-4}
+    \jlu@mainmattertrue
+    \jlu@sectionbreakfalse
 }
 
 % 6. 章节命令重定义 (Section Command Redefinition)
@@ -402,12 +411,46 @@
     \IfBooleanTF{#1}{
         \oldsection*{#2}
     }{
+        \ifjlu@mainmatter
+            \ifjlu@sectionbreak
+                \clearpage
+            \else
+                \global\jlu@sectionbreaktrue
+            \fi
+        \fi
         \oldsection{#2}
-        \markboth{\text{第}\thesection\text{章} \quad #2}{\text{第}\thesection\text{章} \quad #2}
+        \markboth{第\thesection 章\quad #2}{第\thesection 章\quad #2}
     }
 }
 
-% 7. 致谢环境 (Acknowledgment Environment)
+% 7. 承诺书生成命令 (Commitment Command)
+% 使用方法：\makecommitment
+\newcommand{\makecommitment}{
+    \clearpage
+    \IfFileExists{docs/commitment.pdf}{
+        \includepdf[pages=-,pagecommand={\thispagestyle{empty}}]{docs/commitment.pdf}
+    }{
+        \begin{titlepage}
+            \thispagestyle{empty}
+            \centering
+            \vspace*{2.8cm}
+            {\songti\zihao{2}\bfseries \commitment@title \par}
+            \vspace{2.5cm}
+            {\songti\zihao{3}\linespread{1.7}\selectfont
+                \parindent=2\ccwd
+                \noindent \commitment@content \par
+            }
+            \vfill
+            \begin{flushright}
+                {\songti\zihao{3} \commitment@sign \par}
+                \vspace{1.8cm}
+                {\songti\zihao{3} \commitment@time \par}
+            \end{flushright}
+        \end{titlepage}
+    }
+}
+
+% 8. 致谢环境 (Acknowledgment Environment)
 % 使用方法：\begin{acknowledgment} ... \end{acknowledgment}
 \newenvironment{acknowledgment}{
     \newpage
@@ -420,7 +463,7 @@
     \par
 }
 
-% 8. 参考文献生成命令 (Bibliography Command)
+% 9. 参考文献生成命令 (Bibliography Command)
 % 使用方法：\makebibliography
 \newcommand{\makebibliography}{
     \newpage

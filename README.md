@@ -20,7 +20,7 @@
 
 - **实现方式**: 封面由 LaTeX 代码自动生成 (见 `jluthesis.cls` 中的 `\makecover` 命令)。
 - **配置方法**: 所有封面信息（题目、姓名、学号等）均在 `jluthesis.cfg` 中配置，实现了**内容与格式分离**。
-- **承诺书**: 采用 `pdfpages` 宏包插入扫描版 PDF (`docs/commitment.pdf`)，确保法律效力。
+- **承诺书**: 通过统一命令 `\makecommitment` 处理；若存在 `docs/commitment.pdf` 则优先插入扫描版 PDF，不存在时回退到 `jluthesis.cfg` 中的文字版承诺书。
 - **行距控制**: 封面行距可复写 `\linespread` 进行调整 (默认 1.2-1.6倍)。
 
 ### 2. 版面与页面设置
@@ -87,6 +87,15 @@ thesis-template/
 
 ---
 
+## 🤝 贡献与反馈
+
+如果你在使用过程中遇到编译失败、版式偏差、示例说明不清晰等问题，欢迎通过 GitHub Issues 或 Pull Request 反馈。
+
+- 使用者入口：优先查看本 README 中的编译说明、写作指南和常见问题。
+- 贡献与维护：详见 `CONTRIBUTING.md`。
+- 版本变更：详见 `CHANGELOG.md`。
+
+---
 ## 🛠️ 字体配置说明
 
 关于 **fonts 文件夹** 与 **系统安装字体** 的区别：
@@ -131,9 +140,8 @@ thesis-template/
 
 **选项 A：Visual Studio Code (现代化，推荐)**
 
-推荐使用 **Visual Studio Code** 或 Google 的 **Antigravity IDE**。
+推荐使用 **Visual Studio Code** 。
 
-- **Antigravity IDE**: Google 推出的集成 AI 模型的现代化 IDE，基于 VS Code 构建，内置强大的 AI 辅助编程功能。
 - **Visual Studio Code**: 经典的轻量级编辑器。
   - 插件推荐: `LaTeX Workshop`。
   - **配置教程**: 关于 VS Code + LaTeX Workshop 的详细配置，请参考知乎大佬 **Ali-loner** 的文章：
@@ -175,13 +183,14 @@ thesis-template/
    * 请将学校下发的《承诺书》打印、签字、扫描。
    * 将扫描后的 PDF 文件命名为 `commitment.pdf`。
    * 放入项目的 `docs/` 文件夹中。
-   * 模板会自动将其插入到封面之后。
+   * 模板中的 `\makecommitment` 会自动将其插入到封面之后。
+   * 如果暂时没有扫描件，模板会回退到 `jluthesis.cfg` 中的文字版承诺书页，保证示例稿仍然可编译。
 
 ### 2. 摘要与关键词
 
 - **中文摘要**: 在 `main.tex` 中搜索 `中文摘要`，修改该部分文字。
 - **英文摘要**: 在 `main.tex` 中搜索 `Abstract`，修改英文内容。
-- **关键词**: 在摘要下方，找到 `\textbf{关键词:}`，在后面填写关键词，用分号分隔。
+- **关键词**: 中文摘要使用 `\ckeywords{关键词1；关键词2；关键词3}`，英文摘要使用 `\ekeywords{Keyword1; Keyword2; Keyword3}`。
 
 ### 3. 目录
 
@@ -190,7 +199,7 @@ thesis-template/
 
 ### 4. 正文章节
 
-使用以下命令来组织你的论文结构。这会自动处理编号（如 1.1, 1.1.1）和字体大小（三号、四号等）。
+使用以下命令来组织你的论文结构。这会自动处理编号（如 1.1, 1.1.1）和字体大小（三号、四号等）。一级标题（章）会自动另起一页，因此不需要在每章前手动写 `\newpage`。
 
 ```latex
 % 一级标题 (章)
@@ -384,6 +393,7 @@ def foo():
 ## ❓ 常见问题
 
 **Q1: 为什么编译后生成了一堆 `.aux`, `.log`, `.out` 文件？**
+
 A: 这些是 LaTeX 编译过程中产生的辅助文件，用于记录交叉引用、目录等信息。**不要手动删除它们**，否则目录和引用会消失。
 
 - **清理方法**: VS Code 插件通常提供了 "Clean up auxiliary files" 功能。
@@ -391,15 +401,16 @@ A: 这些是 LaTeX 编译过程中产生的辅助文件，用于记录交叉引�
 
 **Q2: 编译报错 "File `docs/commitment.pdf' not found"？**
 
-A: 这是因为缺少承诺书文件。请将你的承诺书 PDF 命名为 `commitment.pdf` 并放入 `docs/` 文件夹。如果不暂时不需要承诺书，可以在 `main.tex` 中注释掉 `\includepdf{docs/commitment.pdf}`。
+A: 模板会优先读取 `docs/commitment.pdf`。如果文件不存在，会自动回退到 `jluthesis.cfg` 中的文字版承诺书页。如果你暂时不想显示承诺书，可以在 `main.tex` 中注释掉 `\makecommitment`。
 
 **Q3: 中文全是乱码或者是方框？**
-A:
 
+A:
 - 确保文件是以 **UTF-8** 编码打开的（VS Code 右下角会显示编码）。
 - 确保你正确配置了字体（见“字体配置”一节），并且用的是 **XeLaTeX** 编译器。
 
 **Q4: Overleaf 上编译超时 (Time out)？**
+
 A: 你的图片可能太大了，或者代码有无限循环错误。检查日志 (Logs)。
 
 ---

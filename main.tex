@@ -12,8 +12,10 @@
 	% =====================================================================
 	% 生成封面 (配置信息在 jluthesis.cfg 中修改)
     \makecover
-	% 插入承诺书 (请确保 docs/commitment.pdf 文件存在)
-	\includepdf{docs/commitment.pdf}
+	% 插入承诺书：
+	% 如果 docs/commitment.pdf 存在，则优先插入扫描版/签字版 PDF；
+	% 否则回退到 jluthesis.cfg 中配置的文字版承诺书页。
+	\makecommitment
 	
 	% =====================================================================
 	% 2. 前置部分 (Front Matter)
@@ -70,7 +72,6 @@
 	\end{enumerate}
 	
 	% 第二章 (Chapter 2)
-	\newpage
 	\section{预备知识}
 	
 	\subsection{相关理论基础}
@@ -83,7 +84,6 @@
 	\end{equation}
 	
 	% 第三章 (Chapter 3)
-	\newpage
 	\section{模型建立与分析}
 	
 	\subsection{算法设计}
@@ -120,7 +120,6 @@ int main() {
 	\end{lstlisting}
 	
 	% 第四章 (Chapter 4)
-	\newpage
 	\section{数值模拟与分析}
 	
 	\subsection{实验设置}
@@ -156,7 +155,6 @@ int main() {
 	\end{table}
 	
 	% 第五章 (Chapter 5)
-	\newpage
 	\section{总结与展望}
 	
 	本文总结了......

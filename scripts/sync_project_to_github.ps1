@@ -2,6 +2,7 @@
 param(
     [string]$Message = "",
     [switch]$StatusOnly,
+    [switch]$StageAll,
     [switch]$SkipFetch,
     [switch]$SkipPush
 )
@@ -68,6 +69,33 @@ function Test-GitStatePath {
     return Test-Path (Join-Path ".git" $Path)
 }
 
+function Test-TextPresent {
+    param(
+        [AllowEmptyString()]
+        [string]$Text
+    )
+
+    return -not [string]::IsNullOrWhiteSpace($Text)
+}
+
+function Get-WorktreeState {
+    $staged = Get-GitOutput -Arguments @("diff", "--cached", "--name-only")
+    $unstaged = Get-GitOutput -Arguments @("diff", "--name-only")
+    $untracked = Get-GitOutput -Arguments @("ls-files", "--others", "--exclude-standard")
+
+    return [pscustomobject]@{
+        Staged        = $staged
+        Unstaged      = $unstaged
+        Untracked     = $untracked
+        HasStaged     = Test-TextPresent -Text $staged
+        HasUnstaged   = Test-TextPresent -Text $unstaged
+        HasUntracked  = Test-TextPresent -Text $untracked
+        HasAnyChanges = (Test-TextPresent -Text $staged) -or
+                        (Test-TextPresent -Text $unstaged) -or
+                        (Test-TextPresent -Text $untracked)
+    }
+}
+
 $repoRoot = Get-GitOutput -Arguments @("rev-parse", "--show-toplevel")
 Set-Location $repoRoot
 
@@ -78,8 +106,7 @@ if ((Test-GitStatePath -Path "MERGE_HEAD") -or
 }
 
 $branch = Get-GitOutput -Arguments @("rev-parse", "--abbrev-ref", "HEAD")
-$statusText = Get-GitOutput -Arguments @("status", "--porcelain")
-$hasChanges = -not [string]::IsNullOrWhiteSpace($statusText)
+$worktree = Get-WorktreeState
 
 Write-Host "Repository: $repoRoot"
 Write-Host "Branch: $branch"
@@ -90,15 +117,29 @@ if ($StatusOnly) {
 }
 
 if (-not [string]::IsNullOrWhiteSpace($Message)) {
-    if ($hasChanges) {
-        Write-Host "Local changes detected. Creating a commit..."
-        Invoke-Git -Arguments @("add", "-A")
+    if ($StageAll) {
+        if ($worktree.HasAnyChanges) {
+            Write-Host "StageAll specified. Staging all local changes before commit..."
+            Invoke-Git -Arguments @("add", "-A")
+            $worktree = Get-WorktreeState
+        }
+    }
+
+    if ($worktree.HasUnstaged -or $worktree.HasUntracked) {
+        throw "Unstaged or untracked changes detected. Stage the exact files you want first, or rerun with -StageAll if you intentionally want to include everything."
+    }
+
+    if ($worktree.HasStaged) {
+        Write-Host "Committing staged changes..."
         Invoke-Git -Arguments @("commit", "-m", $Message)
-        $hasChanges = $false
+        $worktree = Get-WorktreeState
     }
     else {
-        Write-Host "No uncommitted changes detected. Skipping commit."
+        Write-Host "No staged changes detected. Skipping commit."
     }
+}
+elseif ($worktree.HasAnyChanges) {
+    throw "Working tree is not clean. Commit staged changes with -Message, or clean up local edits before syncing."
 }
 
 if (-not $SkipFetch) {

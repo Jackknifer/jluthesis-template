@@ -26,6 +26,7 @@
 
 ### 协作与管理文件
 
+- `CONTRIBUTING.md`：贡献者与维护者入口说明。
 - `PROJECT_MANAGEMENT.md`：本项目管理说明。
 - `CHANGELOG.md`：持续变更记录。
 - `docs/GITHUB_SYNC.md`：GitHub 同步说明。
@@ -99,9 +100,11 @@
 
 1. 先运行 `git status`，确认当前工作区状态。
 2. 修改模板、文档或资源文件。
-3. 在 `CHANGELOG.md` 记录本次改动。
-4. 使用 `scripts/sync_project_to_github.ps1` 执行本地提交与同步。
-5. 如果出现远端分叉，优先先解决冲突，再继续推送。
+3. 用 `git add <文件名>` 显式暂存准备提交的文件。
+4. 在 `CHANGELOG.md` 记录本次改动。
+5. 使用 `scripts/sync_project_to_github.ps1 -Message "..."` 执行本地提交与同步。
+6. 只有在确认所有改动都应一起提交时，才使用 `-StageAll`。
+7. 如果出现远端分叉，优先先解决冲突，再继续推送。
 
 ## 7. 完成定义
 

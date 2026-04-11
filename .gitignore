@@ -10,9 +10,11 @@
 !docs/*.pdf
 *.fdb_latexmk
 *.fls
+*.xdv
 *.dvi
 *.lof
 *.lot
+tmp/
 
 # Editor temporary files
 *.vscode
