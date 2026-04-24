@@ -59,7 +59,7 @@
 ### 6. 参考文献
 
 - **标准**: GB/T 7714-2015 顺序编码制。
-- **实现**: 使用 `gbt7714` 宏包 + 本地自定义样式文件 `jluthesis-gbt7714-numerical.bst` + BibTeX (`references.bib`) 管理。
+- **实现**: 使用 `gbt7714` 宏包 + 本地自定义样式文件 `jluthesis-gbt7714-numerical.bst` + BibTeX (`references.bib`) 管理，并使期刊名以斜体显示。
 - **引用格式**: 数值顺序制，正文中以 `[1]` 形式显示。
 - **编号格式**: 文献列表条目编号显示为 `[1]` 带 0.5em 间距，无悬挂缩进。
 - **姓名格式**: 英文作者名以首字母缩写带点显示（如 `S.` / `S. T.`），不强制全大写。
@@ -78,7 +78,7 @@ thesis-template/
 ├── images/                            # [资源] 图片文件夹 (存放论文插图)
 ├── jluthesis.cfg                      # [配置] 论文基本信息配置文件 (题目、姓名、导师等)
 ├── jluthesis.cls                      # [核心] 样式文件 (定义页眉、标题、格式等核心逻辑)
-├── jluthesis-gbt7714-numerical.bst    # [核心] 本地自定义参考文献样式 (基于 GB/T 7714-2015)
+├── jluthesis-gbt7714-numerical.bst    # [核心] 本地自定义参考文献样式 (期刊名斜体)
 ├── main.tex                           # [入口] 论文主文件 (在此编写正文)
 ├── mcode.sty                          # [插件] 代码高亮宏包
 ├── references.bib                     # [数据] 参考文献数据库
@@ -91,7 +91,7 @@ thesis-template/
 
 如果你在使用过程中遇到编译失败、版式偏差、示例说明不清晰等问题，欢迎通过 GitHub Issues 或 Pull Request 反馈。
 
-- 使用者入口：优先查看本 README 中的编译说明、写作指南和常见问题。
+- 使用者入口：优先查看本 README 中的编译说明、写作与定制速查和常见问题。
 - 贡献与维护：详见 `CONTRIBUTING.md`。
 - 版本变更：详见 `CHANGELOG.md`。
 
@@ -165,228 +165,89 @@ thesis-template/
 
 ---
 
-## 📝 写作指南
+## 📝 写作与定制速查
 
-本模板已为你搭好骨架，你只需要在 `main.tex` 中填充内容。
+本模板的写作入口是 `main.tex`，封面信息集中在 `jluthesis.cfg`，格式规则主要在 `jluthesis.cls` 中。日常写作一般只需要改前两个文件，确需调整排版时再修改样式文件。
 
-### 1. 封面与基本信息
+### 1. 基本写作流程
 
-本模板采用**自动生成封面**的方式，无需 Word 制作。
+1. 在 `jluthesis.cfg` 中填写论文题目、作者、学号、学院、专业、导师和日期。
+2. 将签字扫描后的承诺书命名为 `commitment.pdf`，放入 `docs/` 文件夹。
+3. 在 `main.tex` 中依次替换中文摘要、英文摘要、关键词、正文各章和致谢。
+4. 使用 `XeLaTeX -> BibTeX -> XeLaTeX x2` 编译，确保目录、引用和参考文献全部刷新。
 
-1. **填写信息**: 打开项目根目录下的 `jluthesis.cfg` 文件，按需填写以下信息：
-   * 论文题目 (中文 & 英文)
-   * 作者信息 (姓名、学号、班级、专业、学院)
-   * 导师信息 (姓名、职称)
-   * 日期
-2. **生成封面**: 编译 `main.tex` 时，`\makecover` 命令会读取配置自动生成标准封面。
-3. **承诺书**:
-   * 请将学校下发的《承诺书》打印、签字、扫描。
-   * 将扫描后的 PDF 文件命名为 `commitment.pdf`。
-   * 放入项目的 `docs/` 文件夹中。
-   * 模板中的 `\makecommitment` 会自动将其插入到封面之后。
-   * 如果暂时没有扫描件，模板会回退到 `jluthesis.cfg` 中的文字版承诺书页，保证示例稿仍然可编译。
+### 2. 常用正文元素
 
-### 2. 摘要与关键词
-
-- **中文摘要**: 在 `main.tex` 中搜索 `中文摘要`，修改该部分文字。
-- **英文摘要**: 在 `main.tex` 中搜索 `Abstract`，修改英文内容。
-- **关键词**: 中文摘要使用 `\ckeywords{关键词1；关键词2；关键词3}`，英文摘要使用 `\ekeywords{Keyword1; Keyword2; Keyword3}`。
-
-### 3. 目录
-
-- 目录是**自动生成**的，不要手动去写。
-- **更新目录**: 每次修改章节标题后，目录可能不会立即更新。请连续编译 2 次（VS Code 通常会自动处理），目录就会刷新。
-
-### 4. 正文章节
-
-使用以下命令来组织你的论文结构。这会自动处理编号（如 1.1, 1.1.1）和字体大小（三号、四号等）。一级标题（章）会自动另起一页，因此不需要在每章前手动写 `\newpage`。
+章节命令会自动处理编号、目录和标题样式。
 
 ```latex
-% 一级标题 (章)
 \section{引言}  
-
-% 二级标题 (节)
 \subsection{研究背景}   
-
-% 三级标题 (小节)
 \subsubsection{具体分析}  
 ```
 
-### 5. 插入图片
-
-1. 将图片文件放入 `images/` 文件夹。
-2. 使用 `figure` 环境插入：
+图片放入 `images/` 文件夹后，用 `figure` 环境插入并设置 `label`，正文中用 `\ref{...}` 引用。
 
 ```latex
-\begin{figure}[H] % [H] 表示"Here", 强制图片固定在当前位置, 不自动浮动
-    \centering    % 图片居中
-    % width=0.8\textwidth 表示图片宽度占页面宽度的 80%
+\begin{figure}[H]
+    \centering
     \includegraphics[width=0.8\textwidth]{images/example.jpg} 
-    \caption{这是图片标题} % 自动生成 "图 1.1 这是图片标题"
-    \label{fig:example}  % 设置标签, 用于在文中引用
+    \caption{这是图片标题}
+    \label{fig:example}
 \end{figure}
 ```
 
-- **文中引用**: 使用 `如图 \ref{fig:example} 所示`，编译后会自动变成“如图 1.1 所示”。
-
-### 6. 插入表格 (三线表)
-
-学校通常要求使用“三线表”（顶部和底部线粗，中间线细）。
+表格建议使用 `booktabs` 三线表。
 
 ```latex
 \begin{table}[H]
     \centering
     \caption{这是表格标题}
     \label{tab:data}
-    \begin{tabular}{ccc} % ccc 表示三列都居中, l=left, r=right
-        \toprule  % 顶粗线
+    \begin{tabular}{ccc}
+        \toprule
         列1名称 & 列2名称 & 列3名称 \\
-        \midrule  % 中细线
+        \midrule
         数据A & 数据B & 数据C \\
-        数据D & 数据E & 数据F \\
-        \bottomrule % 底粗线
+        \bottomrule
     \end{tabular}
 \end{table}
 ```
 
-### 7. 数学公式
-
-- **行内公式**: 夹在文字中间的公式，使用两个美元符号 `$...$`。
-  - 例如: `$E = mc^2$`。
-- **独立公式** (自动编号): 使用 `equation` 环境。
+数学公式使用 `$...$` 或 `equation` 环境，代码使用 `lstlisting` 环境。
 
 ```latex
 \begin{equation}
     f(x) = \frac{1}{\sqrt{2\pi}\sigma} e^{-\frac{(x-\mu)^2}{2\sigma^2}}
     \label{eq:gauss} % 标签, 用于引用
 \end{equation}
-```
 
-- **文中引用**: `如公式 \ref{eq:gauss} 所示`。
-
-### 8. 插入代码
-
-本模板集成了 `mcode.sty`（基于强大的 `listings` 宏包），专门用于插入代码，支持语法高亮、自动行号和边框。
-
-#### (1) 基本用法 (代码环境)
-
-直接在文档中编写代码：
-
-```latex
-\begin{lstlisting}
-% 这里写你的代码
+\begin{lstlisting}[language=Python]
 import numpy as np
 print("Hello World")
 \end{lstlisting}
 ```
 
-#### (2) 进阶用法
+### 3. 参考文献
 
-- **指定语言**: 默认配置为 MATLAB 风格高亮。如果要插入 Python、C++ 等其他语言，请指定 `language` 参数：
-
-```latex
-\begin{lstlisting}[language=Python]
-def foo():
-    return "bar"
-\end{lstlisting}
-```
-
-- **行内代码**: 在正文中插入代码片段，使用 `\mcode{...}` 命令：
+参考文献统一写在 `references.bib` 中，正文使用 `\cite{文献Key}` 引用。模板采用 GB/T 7714-2015 顺序编码制，正文引用显示为 `[1]`，列表编号保留为 `[1]` 形式，并已设置期刊名斜体。
 
 ```latex
-我们在函数 \mcode{main()} 中调用了...
-```
-
-- **导入外部文件**: 如果代码太长，建议放在单独的文件中（如 `code/script.py`），然后导入：
-
-```latex
-\lstinputlisting[language=Python]{code/script.py}
-\lstinputlisting{filename}
-```
-
-- **配置**: 模板默认开启了代码边框和行号。如果需要修改（如去掉行号），请查阅 `mcode.sty` 文件中的注释进行调整。
-
-### 9. 参考文献
-
-本模板使用 **BibTeX** 管理参考文献，配合本地自定义样式文件 `jluthesis-gbt7714-numerical.bst`（基于 GB/T 7714-2015 国标改制），自动生成符合国标的参考文献列表。
-
-**格式特性**:
-
-- 数值顺序制，正文引用显示为 `[1]`、`[2,3]` 等形式。
-- 文献列表编号格式为 `[1]`（有间距，无悬挂缩进）。
-- 英文作者名以首字母缩写带点显示（如 `Zhang S. T.`），不全大写。
-- 支持中英文混合文献自动识别排版。
-
-**使用步骤**:
-
-1. **准备数据**:
-   * 在 Google Scholar、百度学术或知网搜索文献。
-   * 点击"引用" -> "BibTeX" -> 复制内容。
-   * 将复制的内容粘贴到项目根目录下的 `references.bib` 文件中。
-2. **在文中引用**:
-   * 找到 BibTeX 条目第一行大括号后的标识符 (Key)，例如 `@article{jiang2025robust, ...}` 中的 `jiang2025robust`。
-   * 在 `main.tex` 正文中使用 `\cite{jiang2025robust}`。
-3. **编译**:
-   * 通常编辑器会自动处理。如果引用显示为 `[?]`，请尝试重新编译 1-2 次。
-
-**示例**:
-
-```latex
-% 在 main.tex 中
 根据张三等人的研究 \cite{zhang2025robust} ...
-
-% 编译后效果
-根据张三等人的研究 [1] ...
-```
-> **注意**: 不要直接在 `main.tex` 里手动写 `\bibitem`，所有文献都应放在 `references.bib` 里统一管理。
-
-> **进阶说明**: 若需定制参考文献格式（如修改作者名显示方式、开关全大写等），可直接编辑项目根目录下的 `jluthesis-gbt7714-numerical.bst` 文件，相关配置集中在文件顶部的 `load.config` 函数中。
-## ⚙️ 进阶定制 (修改格式)
-
-如果你需要调整格式以满足特殊需求，请参考以下指南。
-
-### 1. 修改页边距
-
-- **位置**: `jluthesis.cls` 文件。
-- **修改**: 找到 `\RequirePackage[margin=1in]{geometry}`，修改数值（如 `margin=2.5cm`）。
-
-### 2. 修改行距
-
-- **封面**: 在 `jluthesis.cls` 中找到 `\makecover` 定义下的 `\linespread{...}`。
-- **正文**: 在 `jluthesis.cls` 或 `main.tex` 中添加 `\linespread{数值}`。
-
-### 3. 修改字体 (从文件 vs 系统字体)
-
-模板默认使用 `fonts/` 文件夹下的字体文件，这样在不同电脑上（包括 Overleaf）效果一致。
-如果你想**使用系统安装的字体**（例如你电脑上已经安装了华文行楷等特殊字体）：
-
-1. **注释掉**带 `Path=fonts/` 的那行代码。
-2. **使用**系统字体名：
-
-```latex
-% \setCJKmainfont{SimSun} % 直接使用系统宋体
-% \newCJKfontfamily{\kaiti}{KaiTi} % 定义楷体
 ```
 
-### 4. 修改页眉页脚
+不要在 `main.tex` 中手动写 `\bibitem`。如果引用显示为 `[?]`，请按完整编译链重新编译。
 
-本模板使用 `fancyhdr` 宏包。
+### 4. 格式微调
 
-```latex
-\fancypagestyle{yemei}{
-    \fancyhf{} % 清空
-    \fancyhead[C]{...} % C=Center, L=Left, R=Right
-    \fancyfoot[C]{\thepage} % 页脚页码
-}
-```
+- **页边距**: 在 `jluthesis.cls` 中修改 `\RequirePackage[margin=1in]{geometry}`。
+- **行距**: 正文默认行距在 `jluthesis.cls` 中统一设置；封面行距在 `\makecover` 定义中设置。
+- **字体**: 默认从 `fonts/` 文件夹加载宋体和黑体，跨平台更稳定；如需系统字体，可调整带 `Path=fonts/` 的字体定义。
+- **页眉页脚**: 修改 `fancyhdr` 相关设置，如 `\fancyhead`、`\fancyfoot`。
+- **目录深度**: 修改 `\setcounter{tocdepth}{...}`，`2` 显示到二级标题，`3` 显示到三级标题。
+- **参考文献样式**: 修改 `jluthesis-gbt7714-numerical.bst` 顶部的 `load.config` 或相关格式函数。
 
-### 5. 目录显示深度
-
-如果你希望目录显示到三级标题（例如 1.1.1），请修改：
-
-```latex
-\setcounter{tocdepth}{3} % 2=显示到subsection, 3=显示到subsubsection
-```
+格式调整前建议先备份当前可编译版本，修改后至少完整编译一次检查封面、目录、正文和参考文献。
 
 ---
 

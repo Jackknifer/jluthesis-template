@@ -77,7 +77,7 @@ FUNCTION {load.config}
   #1 'show.medium.type :=
   "slash" 'component.part.label :=
   #0 'short.journal :=
-  #0 'italic.journal :=
+  #1 'italic.journal :=
   #0 'bold.journal.volume :=
   #0 'show.missing.address.publisher :=
   #1 'space.before.pages :=
@@ -1066,7 +1066,7 @@ FUNCTION {check.arxiv.preprint}
 FUNCTION {format.journal}
 { get.journal.title
   duplicate$ empty$ not
-    { italic.journal entry.lang lang.en = and
+    { italic.journal
         'emphasize
         'skip$
       if$
