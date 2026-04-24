@@ -10,6 +10,10 @@
 
 ## [Unreleased]
 
+### Changed
+
+- 优化 `CONTRIBUTING.md`，使其更适合公开协作，并弱化本地维护脚本细节。
+
 ## [0.1.1] - 2026-04-24
 
 ### Changed
